@@ -9,15 +9,10 @@ const stripeRouter = require("./routes/stripe");
 const bodyParser = require('body-parser');
 const Order = require('./models/orders')
 
-
 dotenv.config()
 
 const stripe = Stripe(process.env.STRIPE_SECRET);
 mongoose.connect(process.env.MONGO_URL).then(() => console.log("db connected")).catch((err) => console.log(err));
-
-
-
-
 
 const createOrder = async (customer, data) => {
   const Items = JSON.parse(customer.metadata.cart);
@@ -50,11 +45,8 @@ const createOrder = async (customer, data) => {
 
 const endpointSecret = "whsec_bM0r5z8XJD6V7u7DsPvwiyPXiIxu9CdL";
 
-
-
 app.post('/webhook', express.raw({ type: 'application/json' }), (request, response) => {
   const sig = request.headers['stripe-signature'];
-
   let event;
 
   try {
@@ -64,8 +56,6 @@ app.post('/webhook', express.raw({ type: 'application/json' }), (request, respon
     return;
   }
  
-
-
   // Handle the event
   switch (event.type) {
     case 'payment_intent.succeeded':

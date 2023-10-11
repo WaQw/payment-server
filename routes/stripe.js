@@ -28,7 +28,7 @@ const checkoutSuccessPage = fs.readFileSync(
   });
 
 
-router.post("/create-checkout-session", async (req, res) => {
+router.post("/create-checkout-session", bodyParser.json(), async (req, res) => {
   const customer = await stripe.customers.create({
     metadata: {
       userId: req.body.userId,
@@ -36,7 +36,6 @@ router.post("/create-checkout-session", async (req, res) => {
     },
   });
 
- 
   const line_items = req.body.cartItems.map((item) => {
     return {
       price_data: {
@@ -54,10 +53,9 @@ router.post("/create-checkout-session", async (req, res) => {
       quantity: item.cartQuantity,
     };
   });
+
   const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
-   
-    
+    payment_method_types: ["card"],   
     phone_number_collection: {
       enabled: false,
     },
